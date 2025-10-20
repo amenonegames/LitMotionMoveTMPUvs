@@ -1,5 +1,5 @@
 {
-    "name": "com.annulusgames.lit-motion.animation",
+    "name": "com.amenonegames.lit-motion.animation",
     "version": "2.0.1",
     "displayName": "LitMotion.Animation",
     "description": "Animation component (visual editor) for LitMotion",
@@ -9,7 +9,7 @@
         "animation"
     ],
     "dependencies": {
-        "com.annulusgames.lit-motion": "2.0.0"
+        "com.amenonegames.lit-motion": "2.0.0"
     },
     "author": {
         "name": "Annulus Games"
