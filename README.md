@@ -56,7 +56,7 @@ The full version of documentation can be found [here](https://annulusgames.githu
 3. Enter the following URL:
 
 ```
-https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion
+https://github.com/amenonegames/LitMotionMoveTMPUvs.git?path=src/LitMotion/Assets/LitMotion.Animation
 ```
 
 Alternatively, open Packages/manifest.json and add the following to the dependencies block:
@@ -64,7 +64,7 @@ Alternatively, open Packages/manifest.json and add the following to the dependen
 ```json
 {
     "dependencies": {
-        "com.annulusgames.lit-motion": "https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion"
+        "com.annulusgames.lit-motion": "https://github.com/amenonegames/LitMotionMoveTMPUvs.git?path=src/LitMotion/Assets/LitMotion.Animation"
     }
 }
 ```
@@ -223,7 +223,7 @@ Alternatively, you can open the `Packages/manifest.json` file and add the follow
 ```json
 {
     "dependencies": {
-        "com.annulusgames.lit-motion.animation": "https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion.Animation"
+        "com.annulusgames.lit-motion.animation": "https://github.com/amenonegames/LitMotionMoveTMPUvs.git?path=src/LitMotion/Assets/LitMotion.Animation"
     }
 }
 ```
