@@ -215,7 +215,7 @@ You can install LitMotion using the Package Manager.
 3. Enter the following URL:
 
 ```text
-https://github.com/annulusgames/LitMotion.git?path=src/LitMotion/Assets/LitMotion.Animation
+https://github.com/amenonegames/LitMotionMoveTMPUvs.git?path=src/LitMotion/Assets/LitMotion.Animation
 ```
 
 Alternatively, you can open the `Packages/manifest.json` file and add the following line within the `dependencies` block:
