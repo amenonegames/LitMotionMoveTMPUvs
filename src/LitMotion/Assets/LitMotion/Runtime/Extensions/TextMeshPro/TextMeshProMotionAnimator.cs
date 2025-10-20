@@ -158,6 +158,8 @@ namespace LitMotion.Extensions
             public Vector3 scale;
             public Quaternion rotation;
             public Color color;
+            public Vector2 uv3;
+            public Vector4 tangent;
         }
 
         public TextMeshProMotionAnimator()
@@ -169,6 +171,8 @@ namespace LitMotion.Extensions
                 charInfoArray[i].rotation = Quaternion.identity;
                 charInfoArray[i].scale = Vector3.one;
                 charInfoArray[i].position = Vector3.zero;
+                charInfoArray[i].uv3 = Vector2.zero;
+                charInfoArray[i].tangent = Vector4.zero;
             }
 
             updateAction = UpdateCore;
@@ -197,6 +201,8 @@ namespace LitMotion.Extensions
                         charInfoArray[i].rotation = Quaternion.identity;
                         charInfoArray[i].scale = Vector3.one;
                         charInfoArray[i].position = Vector3.zero;
+                        charInfoArray[i].uv3 = Vector2.zero;
+                        charInfoArray[i].tangent = Vector4.zero;
                     }
                 }
             }
@@ -222,6 +228,8 @@ namespace LitMotion.Extensions
                 charInfoArray[i].rotation = Quaternion.identity;
                 charInfoArray[i].scale = Vector3.one;
                 charInfoArray[i].position = Vector3.zero;
+                charInfoArray[i].uv3 = Vector2.zero;
+                charInfoArray[i].tangent = Vector4.zero;
             }
 
             isDirty = false;
@@ -257,12 +265,19 @@ namespace LitMotion.Extensions
                 var vertexIndex = charInfo.vertexIndex;
 
                 ref var colors = ref textInfo.meshInfo[materialIndex].colors32;
+                ref var uv3 = ref textInfo.meshInfo[materialIndex].uvs2;
                 ref var motionCharInfo = ref charInfoArray[i];
 
                 var charColor = motionCharInfo.color;
                 for (int n = 0; n < 4; n++)
                 {
                     colors[vertexIndex + n] = charColor;
+                }
+
+                var charuv3 = motionCharInfo.uv3;
+                for (int n = 0; n < 4; n++)
+                {
+                    uv3[vertexIndex + n] = charuv3;
                 }
 
                 var verts = textInfo.meshInfo[materialIndex].vertices;
@@ -286,6 +301,7 @@ namespace LitMotion.Extensions
                 if (textInfo.meshInfo[i].mesh == null) continue;
                 textInfo.meshInfo[i].mesh.colors32 = textInfo.meshInfo[i].colors32;
                 textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
+                textInfo.meshInfo[i].mesh.uv2 = textInfo.meshInfo[i].uvs2;
                 target.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
             }
         }

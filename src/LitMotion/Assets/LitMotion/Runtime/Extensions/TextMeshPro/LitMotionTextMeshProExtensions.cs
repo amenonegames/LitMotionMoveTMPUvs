@@ -700,6 +700,23 @@ namespace LitMotion.Extensions
             return handle;
         }
 
+        public static MotionHandle BindToTMPCharUv3<TOptions, TAdapter>(this MotionBuilder<Vector2, TOptions, TAdapter> builder, TMP_Text text, int charIndex)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector2, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].uv3 = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
         /// <summary>
         /// Create motion data and bind it to the character position.
         /// </summary>
