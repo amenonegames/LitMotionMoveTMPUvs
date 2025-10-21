@@ -595,6 +595,24 @@ namespace LitMotion.Extensions
 
             return handle;
         }
+        
+        public static MotionHandle BindToTMPCharColor<TOptions, TAdapter>(this MotionBuilder<Color, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Color initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Color, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialCol(initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].color = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
 
         /// <summary>
         /// Create motion data and bind it to the character color.r.
@@ -674,6 +692,24 @@ namespace LitMotion.Extensions
             return handle;
         }
 
+        public static MotionHandle BindToTMPCharColorA<TOptions, TAdapter>(this MotionBuilder<float, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Color initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<float, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialCol(initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].color.a = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
         /// <summary>
         /// Create motion data and bind it to the character color.a.
         /// </summary>
@@ -708,6 +744,24 @@ namespace LitMotion.Extensions
 
             var animator = TextMeshProMotionAnimator.Get(text);
             animator.EnsureCapacity(charIndex + 1);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].uv3 = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
+        public static MotionHandle BindToTMPCharUv3<TOptions, TAdapter>(this MotionBuilder<Vector2, TOptions, TAdapter> builder, TMP_Text text, int charIndex,Vector2 defaultValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector2, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialUV3(defaultValue);
             var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
             {
                 animator.charInfoArray[charIndex.Value].uv3 = x;

@@ -162,17 +162,60 @@ namespace LitMotion.Extensions
             public Vector4 tangent;
         }
 
+        private Color initialColor = Color.white;
+        private Quaternion initialRotation = Quaternion.identity;
+        private Vector3 initialScale = Vector3.one;
+        private Vector3 initialPosition = Vector3.zero;
+        private Vector2 initialUV3 = Vector2.zero;
+        private Vector4 initialTangent = Vector4.zero;
+
+        public void SetInitialCol( Color col)
+        {
+            initialColor = col;
+            Reset();
+        }
+
+        public void SetInitialRotation(Quaternion rot)
+        {
+            initialRotation = rot;
+            Reset();
+        }
+
+        public void SetInitialScale( Vector3 scale)
+        {
+            initialScale = scale;
+            Reset();
+        }
+
+        public void SetInitialPosition( Vector3 pos)
+        {
+            initialPosition = pos;
+            Reset();
+        }
+
+        public void SetInitialUV3(Vector2 uv3)
+        {
+            initialUV3 = uv3;
+            Reset();
+        }
+
+        public void SetInitialTangent(Vector4 tangent)
+        {
+            initialTangent = tangent;
+            Reset();
+        }
+
         public TextMeshProMotionAnimator()
         {
             charInfoArray = new CharInfo[32];
             for (int i = 0; i < charInfoArray.Length; i++)
             {
-                charInfoArray[i].color = Color.white;
-                charInfoArray[i].rotation = Quaternion.identity;
-                charInfoArray[i].scale = Vector3.one;
-                charInfoArray[i].position = Vector3.zero;
-                charInfoArray[i].uv3 = Vector2.zero;
-                charInfoArray[i].tangent = Vector4.zero;
+                charInfoArray[i].color = initialColor;
+                charInfoArray[i].rotation = initialRotation;
+                charInfoArray[i].scale = initialScale;
+                charInfoArray[i].position = initialPosition;
+                charInfoArray[i].uv3 = initialUV3;
+                charInfoArray[i].tangent = initialTangent;
             }
 
             updateAction = UpdateCore;
@@ -197,12 +240,12 @@ namespace LitMotion.Extensions
                 {
                     for (int i = prevLength; i < length; i++)
                     {
-                        charInfoArray[i].color = new(target.color.r, target.color.g, target.color.b, target.color.a);
-                        charInfoArray[i].rotation = Quaternion.identity;
-                        charInfoArray[i].scale = Vector3.one;
-                        charInfoArray[i].position = Vector3.zero;
-                        charInfoArray[i].uv3 = Vector2.zero;
-                        charInfoArray[i].tangent = Vector4.zero;
+                        charInfoArray[i].color = initialColor;
+                        charInfoArray[i].rotation = initialRotation;
+                        charInfoArray[i].scale = initialScale;
+                        charInfoArray[i].position = initialPosition;
+                        charInfoArray[i].uv3 = initialUV3;
+                        charInfoArray[i].tangent = initialTangent;
                     }
                 }
             }
@@ -224,12 +267,12 @@ namespace LitMotion.Extensions
         {
             for (int i = 0; i < charInfoArray.Length; i++)
             {
-                charInfoArray[i].color = new(target.color.r, target.color.g, target.color.b, target.color.a);
-                charInfoArray[i].rotation = Quaternion.identity;
-                charInfoArray[i].scale = Vector3.one;
-                charInfoArray[i].position = Vector3.zero;
-                charInfoArray[i].uv3 = Vector2.zero;
-                charInfoArray[i].tangent = Vector4.zero;
+                charInfoArray[i].color =initialColor;
+                charInfoArray[i].rotation = initialRotation;
+                charInfoArray[i].scale = initialScale;
+                charInfoArray[i].position = initialPosition;
+                charInfoArray[i].uv3 = initialUV3;
+                charInfoArray[i].tangent = initialTangent;
             }
 
             isDirty = false;
