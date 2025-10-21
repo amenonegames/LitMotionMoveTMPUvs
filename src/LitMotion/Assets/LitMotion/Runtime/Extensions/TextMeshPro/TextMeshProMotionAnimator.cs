@@ -344,7 +344,7 @@ namespace LitMotion.Extensions
                 if (textInfo.meshInfo[i].mesh == null) continue;
                 textInfo.meshInfo[i].mesh.colors32 = textInfo.meshInfo[i].colors32;
                 textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
-                textInfo.meshInfo[i].mesh.uv2 = textInfo.meshInfo[i].uvs2;
+                textInfo.meshInfo[i].mesh.uv3 = textInfo.meshInfo[i].uvs2;
                 target.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
             }
         }
