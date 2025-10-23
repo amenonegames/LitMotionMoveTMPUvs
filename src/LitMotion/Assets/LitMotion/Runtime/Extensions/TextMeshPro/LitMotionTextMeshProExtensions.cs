@@ -735,7 +735,42 @@ namespace LitMotion.Extensions
 
             return handle;
         }
+#if LITMOTION_TMP_TANGENT_OVERRIDE
+        public static MotionHandle BindToTMPCharTangent<TOptions, TAdapter>(this MotionBuilder<Vector4, TOptions, TAdapter> builder, TMP_Text text, int charIndex)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector4, TOptions>
+        {
+            Error.IsNull(text);
 
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].tangent = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
+        public static MotionHandle BindToTMPCharTangent<TOptions, TAdapter>(this MotionBuilder<Vector4, TOptions, TAdapter> builder, TMP_Text text, int charIndex,Vector4 initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector4, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialTangent(initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].tangent = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+#endif
         public static MotionHandle BindToTMPCharUv3<TOptions, TAdapter>(this MotionBuilder<Vector2, TOptions, TAdapter> builder, TMP_Text text, int charIndex)
             where TOptions : unmanaged, IMotionOptions
             where TAdapter : unmanaged, IMotionAdapter<Vector2, TOptions>
@@ -789,7 +824,6 @@ namespace LitMotion.Extensions
             return handle;
         }
 
-        
         /// <summary>
         /// Create motion data and bind it to the character position.
         /// </summary>
@@ -920,7 +954,6 @@ namespace LitMotion.Extensions
             return handle;
         }
 
-        
         public static MotionHandle BindToTMPCharEulerAngles<TOptions, TAdapter>(this MotionBuilder<Vector3, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Vector3 initialValue)
             where TOptions : unmanaged, IMotionOptions
             where TAdapter : unmanaged, IMotionAdapter<Vector3, TOptions>
@@ -938,8 +971,7 @@ namespace LitMotion.Extensions
 
             return handle;
         }
-        
-        
+
         /// <summary>
         /// Create motion data and bind it to the character rotation (using euler angles).
         /// </summary>

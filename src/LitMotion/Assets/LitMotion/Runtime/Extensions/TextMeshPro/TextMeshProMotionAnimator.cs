@@ -1,5 +1,6 @@
 #if LITMOTION_SUPPORT_TMP
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -159,7 +160,9 @@ namespace LitMotion.Extensions
             public Quaternion rotation;
             public Color color;
             public Vector2 uv3;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
             public Vector4 tangent;
+#endif
         }
 
         private Color initialColor = Color.white;
@@ -167,8 +170,9 @@ namespace LitMotion.Extensions
         private Vector3 initialScale = Vector3.one;
         private Vector3 initialPosition = Vector3.zero;
         private Vector2 initialUV3 = Vector2.zero;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
         private Vector4 initialTangent = Vector4.zero;
-
+#endif
         public void SetInitialCol( Color col)
         {
             initialColor = col;
@@ -198,12 +202,13 @@ namespace LitMotion.Extensions
             initialUV3 = uv3;
             Reset();
         }
-
+#if LITMOTION_TMP_TANGENT_OVERRIDE
         public void SetInitialTangent(Vector4 tangent)
         {
             initialTangent = tangent;
             Reset();
         }
+#endif
 
         public TextMeshProMotionAnimator()
         {
@@ -215,7 +220,9 @@ namespace LitMotion.Extensions
                 charInfoArray[i].scale = initialScale;
                 charInfoArray[i].position = initialPosition;
                 charInfoArray[i].uv3 = initialUV3;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
                 charInfoArray[i].tangent = initialTangent;
+#endif
             }
 
             updateAction = UpdateCore;
@@ -245,7 +252,9 @@ namespace LitMotion.Extensions
                         charInfoArray[i].scale = initialScale;
                         charInfoArray[i].position = initialPosition;
                         charInfoArray[i].uv3 = initialUV3;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
                         charInfoArray[i].tangent = initialTangent;
+#endif
                     }
                 }
             }
@@ -272,7 +281,9 @@ namespace LitMotion.Extensions
                 charInfoArray[i].scale = initialScale;
                 charInfoArray[i].position = initialPosition;
                 charInfoArray[i].uv3 = initialUV3;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
                 charInfoArray[i].tangent = initialTangent;
+#endif
             }
 
             isDirty = false;
@@ -310,7 +321,9 @@ namespace LitMotion.Extensions
                 ref var colors = ref textInfo.meshInfo[materialIndex].colors32;
                 ref var uv3 = ref textInfo.meshInfo[materialIndex].uvs2;
                 ref var motionCharInfo = ref charInfoArray[i];
-
+#if LITMOTION_TMP_TANGENT_OVERRIDE
+                ref var tangent = ref textInfo.meshInfo[materialIndex].tangents;
+#endif
                 var charColor = motionCharInfo.color;
                 for (int n = 0; n < 4; n++)
                 {
@@ -322,6 +335,13 @@ namespace LitMotion.Extensions
                 {
                     uv3[vertexIndex + n] = charuv3;
                 }
+#if LITMOTION_TMP_TANGENT_OVERRIDE
+                var charTangent = motionCharInfo.tangent;
+                for (int n = 0; n < 4; n++)
+                {
+                    tangent[vertexIndex + n] = charTangent;
+                }
+#endif
 
                 var verts = textInfo.meshInfo[materialIndex].vertices;
                 var center = (verts[vertexIndex] + verts[vertexIndex + 2]) * 0.5f;
@@ -345,6 +365,9 @@ namespace LitMotion.Extensions
                 textInfo.meshInfo[i].mesh.colors32 = textInfo.meshInfo[i].colors32;
                 textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
                 textInfo.meshInfo[i].mesh.uv4 = textInfo.meshInfo[i].uvs2;
+#if LITMOTION_TMP_TANGENT_OVERRIDE
+                textInfo.meshInfo[i].mesh.tangents = textInfo.meshInfo[i].tangents;
+#endif
                 target.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
             }
         }
