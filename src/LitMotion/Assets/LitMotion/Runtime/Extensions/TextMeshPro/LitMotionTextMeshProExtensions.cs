@@ -771,6 +771,25 @@ namespace LitMotion.Extensions
             return handle;
         }
 
+        public static MotionHandle BindToTMPCharPosition<TOptions, TAdapter>(this MotionBuilder<Vector3, TOptions, TAdapter> builder, TMP_Text text, int charIndex,Vector3 initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector3, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialPosition(initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].position = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
+        
         /// <summary>
         /// Create motion data and bind it to the character position.
         /// </summary>
@@ -901,6 +920,26 @@ namespace LitMotion.Extensions
             return handle;
         }
 
+        
+        public static MotionHandle BindToTMPCharEulerAngles<TOptions, TAdapter>(this MotionBuilder<Vector3, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Vector3 initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector3, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialRotation(Quaternion.Euler(initialValue));
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].rotation = Quaternion.Euler(x);
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+        
+        
         /// <summary>
         /// Create motion data and bind it to the character rotation (using euler angles).
         /// </summary>
@@ -1005,6 +1044,24 @@ namespace LitMotion.Extensions
                 var eulerAngles = animator.charInfoArray[charIndex.Value].rotation.eulerAngles;
                 eulerAngles.z = x;
                 animator.charInfoArray[charIndex.Value].rotation = Quaternion.Euler(eulerAngles);
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
+        public static MotionHandle BindToTMPCharScale<TOptions, TAdapter>(this MotionBuilder<Vector3, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Vector3 initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<Vector3, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialScale( initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].scale = x;
                 animator.SetDirty();
             });
 
