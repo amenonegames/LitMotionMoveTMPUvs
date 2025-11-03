@@ -236,7 +236,11 @@ namespace LitMotion.Extensions
 #endif
             }
 
-            updateAction = UpdateCore;
+            updateAction = ()=>
+            {
+                UpdateCore();
+                isDirty = false;
+            };
         }
 
         TMP_Text target;
