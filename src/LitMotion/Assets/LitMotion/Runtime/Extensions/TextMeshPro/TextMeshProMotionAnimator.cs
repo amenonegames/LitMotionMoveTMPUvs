@@ -236,17 +236,22 @@ namespace LitMotion.Extensions
 #endif
             }
 
-            updateAction = ()=>
-            {
-                UpdateCore();
-                isDirty = false;
-            };
+            updateAction = UpdateCore;
+            completeAction = OnMotionComplete;
+        }
+
+        void OnMotionComplete()
+        {
+            DecrementMotionCount();
+            UpdateCore();
         }
 
         TMP_Text target;
         internal readonly Action updateAction;
+        internal readonly Action completeAction;
         internal CharInfo[] charInfoArray;
         bool isDirty;
+        int activeMotionCount;
 
         TextMeshProMotionAnimator nextNode;
 
@@ -287,6 +292,19 @@ namespace LitMotion.Extensions
             isDirty = true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void IncrementMotionCount()
+        {
+            activeMotionCount++;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void DecrementMotionCount()
+        {
+            activeMotionCount--;
+            if (activeMotionCount < 0) activeMotionCount = 0;
+        }
+
         public void Reset()
         {
             for (int i = 0; i < charInfoArray.Length; i++)
@@ -324,9 +342,10 @@ namespace LitMotion.Extensions
             if (isDirty)
             {
                 UpdateCore();
+                isDirty = false;
             }
 
-            return true;
+            return activeMotionCount > 0;
         }
 
         private Color GetTextMeshColor(int index)
