@@ -692,6 +692,24 @@ namespace LitMotion.Extensions
             return handle;
         }
 
+        public static MotionHandle BindToTMPCharColorA<TOptions, TAdapter>(this MotionBuilder<float, TOptions, TAdapter> builder, TMP_Text text, int charIndex , float initialValue)
+            where TOptions : unmanaged, IMotionOptions
+            where TAdapter : unmanaged, IMotionAdapter<float, TOptions>
+        {
+            Error.IsNull(text);
+
+            var animator = TextMeshProMotionAnimator.Get(text);
+            animator.EnsureCapacity(charIndex + 1);
+            animator.SetInitialAlpha(initialValue);
+            var handle = builder.WithOnComplete(animator.updateAction).Bind(animator, Box.Create(charIndex), static (x, animator, charIndex) =>
+            {
+                animator.charInfoArray[charIndex.Value].color.a = x;
+                animator.SetDirty();
+            });
+
+            return handle;
+        }
+
         public static MotionHandle BindToTMPCharColorA<TOptions, TAdapter>(this MotionBuilder<float, TOptions, TAdapter> builder, TMP_Text text, int charIndex , Color initialValue)
             where TOptions : unmanaged, IMotionOptions
             where TAdapter : unmanaged, IMotionAdapter<float, TOptions>

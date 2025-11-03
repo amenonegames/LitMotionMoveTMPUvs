@@ -166,6 +166,7 @@ namespace LitMotion.Extensions
         }
 
         private Color initialColor = Color.white;
+        private float initialAlpha = -1f;
         private Quaternion initialRotation = Quaternion.identity;
         private Vector3 initialScale = Vector3.one;
         private Vector3 initialPosition = Vector3.zero;
@@ -173,9 +174,19 @@ namespace LitMotion.Extensions
 #if LITMOTION_TMP_TANGENT_OVERRIDE
         private Vector4 initialTangent = Vector4.zero;
 #endif
+
+        public void SetInitialAlpha( float alpha)
+        {
+            initialColor = Color.white;
+            initialAlpha = alpha;
+            Reset();
+        }
+
+        
         public void SetInitialCol( Color col)
         {
             initialColor = col;
+            initialAlpha = -1;
             Reset();
         }
 
@@ -215,7 +226,7 @@ namespace LitMotion.Extensions
             charInfoArray = new CharInfo[32];
             for (int i = 0; i < charInfoArray.Length; i++)
             {
-                charInfoArray[i].color = initialColor;
+                SetInitialColor(i);
                 charInfoArray[i].rotation = initialRotation;
                 charInfoArray[i].scale = initialScale;
                 charInfoArray[i].position = initialPosition;
@@ -247,7 +258,7 @@ namespace LitMotion.Extensions
                 {
                     for (int i = prevLength; i < length; i++)
                     {
-                        charInfoArray[i].color = initialColor;
+                        SetInitialColor(i);
                         charInfoArray[i].rotation = initialRotation;
                         charInfoArray[i].scale = initialScale;
                         charInfoArray[i].position = initialPosition;
@@ -276,7 +287,7 @@ namespace LitMotion.Extensions
         {
             for (int i = 0; i < charInfoArray.Length; i++)
             {
-                charInfoArray[i].color =initialColor;
+                SetInitialColor(i);
                 charInfoArray[i].rotation = initialRotation;
                 charInfoArray[i].scale = initialScale;
                 charInfoArray[i].position = initialPosition;
@@ -287,6 +298,17 @@ namespace LitMotion.Extensions
             }
 
             isDirty = false;
+        }
+
+        private void SetInitialColor(int i)
+        {
+            if( initialAlpha >= 0f )
+            {
+                var col = GetTextMeshColor(i);
+                col.a = initialAlpha;
+                charInfoArray[i].color = col;
+            }
+            else charInfoArray[i].color = initialColor;
         }
 
 
@@ -301,6 +323,16 @@ namespace LitMotion.Extensions
             }
 
             return true;
+        }
+
+        private Color GetTextMeshColor(int index)
+        {
+            var textInfo = target.textInfo;
+            ref var charInfo = ref textInfo.characterInfo[index];
+            var materialIndex = charInfo.materialReferenceIndex;
+            ref var colors = ref textInfo.meshInfo[materialIndex].colors32;
+            var vertexIndex = charInfo.vertexIndex;
+            return colors[vertexIndex];
         }
 
         void UpdateCore()
