@@ -328,10 +328,31 @@ namespace LitMotion.Extensions
         private Color GetTextMeshColor(int index)
         {
             var textInfo = target.textInfo;
-            ref var charInfo = ref textInfo.characterInfo[index];
+
+            // Check if index is within bounds
+            if (index < 0 || index >= textInfo.characterInfo.Length)
+            {
+                return Color.white;
+            }
+
+            var charInfo = textInfo.characterInfo[index];
             var materialIndex = charInfo.materialReferenceIndex;
-            ref var colors = ref textInfo.meshInfo[materialIndex].colors32;
+
+            // Check if materialIndex is within bounds
+            if (materialIndex < 0 || materialIndex >= textInfo.meshInfo.Length)
+            {
+                return Color.white;
+            }
+
+            var colors = textInfo.meshInfo[materialIndex].colors32;
             var vertexIndex = charInfo.vertexIndex;
+
+            // Check if vertexIndex is within bounds
+            if (vertexIndex < 0 || vertexIndex >= colors.Length)
+            {
+                return Color.white;
+            }
+
             return colors[vertexIndex];
         }
 
