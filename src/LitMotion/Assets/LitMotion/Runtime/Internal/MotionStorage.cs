@@ -428,7 +428,7 @@ namespace LitMotion
                 throw new ArgumentException("Cannot add an infinitely looping motion to a sequence.");
             }
 
-            dataRef.Core.State.IsPreserved = true;
+            dataRef.Core.State.IsPreserved = false;
             dataRef.Core.State.IsInSequence = true;
         }
 
