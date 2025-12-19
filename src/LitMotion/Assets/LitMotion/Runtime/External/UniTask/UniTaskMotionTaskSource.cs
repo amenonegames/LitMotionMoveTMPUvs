@@ -9,12 +9,12 @@ namespace LitMotion
     {
         static UniTaskMotionTaskSource()
         {
-            TaskPool.RegisterSizeGetter(typeof(UniTaskMotionTaskSource), () => pool.Size);
+            // TaskPool.RegisterSizeGetter(typeof(UniTaskMotionTaskSource), () => pool.Size);
         }
 
         UniTaskMotionTaskSource() : base() { }
 
-        static TaskPool<UniTaskMotionTaskSource> pool;
+        // static TaskPool<UniTaskMotionTaskSource> pool;
         UniTaskMotionTaskSource nextNode;
         public ref UniTaskMotionTaskSource NextNode => ref nextNode;
 
@@ -28,11 +28,7 @@ namespace LitMotion
                 return AutoResetUniTaskCompletionSource.CreateFromCanceled(cancellationToken, out token);
             }
 
-            if (!pool.TryPop(out var result))
-            {
-                result = new UniTaskMotionTaskSource();
-            }
-
+            var result = new UniTaskMotionTaskSource();
             result.Initialize(motionHandle, cancelBehavior, cancelAwaitOnMotionCanceled, cancellationToken);
 
             TaskTracker.TrackActiveTask(result, 3);
@@ -78,7 +74,7 @@ namespace LitMotion
             core.OnCompleted(continuation, state, token);
         }
 
-        bool TryReturn()
+        void TryReturn()
         {
             TaskTracker.RemoveTracking(this);
             core.Reset();
@@ -86,8 +82,6 @@ namespace LitMotion
             DisposeRegistration();
             RestoreOriginalCallback();
             ResetFields();
-
-            return pool.TryPush(this);
         }
     }
 }
