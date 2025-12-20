@@ -19,6 +19,7 @@ namespace LitMotion
         public ref UniTaskMotionTaskSource NextNode => ref nextNode;
 
         UniTaskCompletionSourceCore<AsyncUnit> core;
+        bool isReturned;
 
         public static IUniTaskSource Create(MotionHandle motionHandle, CancelBehavior cancelBehavior, bool cancelAwaitOnMotionCanceled, CancellationToken cancellationToken, out short token)
         {
@@ -32,7 +33,7 @@ namespace LitMotion
             {
                 result = new UniTaskMotionTaskSource();
             }
-
+            result.isReturned = false;
             result.Initialize(motionHandle, cancelBehavior, cancelAwaitOnMotionCanceled, cancellationToken);
 
             TaskTracker.TrackActiveTask(result, 3);
@@ -44,11 +45,13 @@ namespace LitMotion
         protected override void SetTaskCanceled(CancellationToken cancellationToken)
         {
             core.TrySetCanceled(cancellationToken);
+            TryReturn();
         }
 
         protected override void SetTaskCompleted()
         {
             core.TrySetResult(AsyncUnit.Default);
+            TryReturn();
         }
 
         public void GetResult(short token)
@@ -80,6 +83,10 @@ namespace LitMotion
 
         bool TryReturn()
         {
+            if (isReturned) return false;
+
+            isReturned = true;
+
             TaskTracker.RemoveTracking(this);
             core.Reset();
 
@@ -87,7 +94,8 @@ namespace LitMotion
             RestoreOriginalCallback();
             ResetFields();
 
-            return pool.TryPush(this);
+            var result = pool.TryPush(this);
+            return result;
         }
     }
 }
